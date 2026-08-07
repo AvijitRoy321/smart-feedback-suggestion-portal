@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Smart Feedback Portal</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+      <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <link rel="icon"
+        type="image/png"
+        href="{{ url_for('static', filename='images/favicon.png') }}">
+
+</head>
+
+<body>
+
+<!-- Navigation Bar -->
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+
+<div class="container">
+
+<a class="navbar-brand d-flex align-items-center" href="/">
+
+    <img
+        src="{{ url_for('static', filename='images/logo.png') }}"
+        alt="SFSP Logo"
+        width="42"
+        class="me-2">
+
+    <span>SFSP</span>
+
+</a>
+
+<button class="navbar-toggler"
+        data-bs-toggle="collapse"
+        data-bs-target="#menu">
+
+<span class="navbar-toggler-icon"></span>
+
+</button>
+
+<div class="collapse navbar-collapse"
+     id="menu">
+
+<ul class="navbar-nav ms-auto">
+
+    <li class="nav-item">
+        <a class="nav-link active" href="/">Home</a>
+    </li>
+
+    <li class="nav-item">
+        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#aboutModal">
+            About
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#contactModal">
+            Contact
+        </a>
+    </li>
+
+</ul>
+
+</div>
+
+</div>
+
+</nav>
+
+<!-- Hero Section -->
+
+<section class="hero">
+
+<div class="container">
+
+<div class="text-center mb-4">
+
+    <img
+        src="{{ url_for('static', filename='images/logo.png') }}"
+        alt="SFSP Logo"
+        width="260"
+        class="img-fluid logo">
+
+</div>
+
+<h1>Welcome to Smart Feedback & Suggestion Portal</h1>
+
+<p>
+
+An AI-powered system where students can submit
+feedback about courses, faculty and campus facilities.
+
+</p>
+
+<a href="/login" class="btn btn-success btn-lg">
+Student Login
+</a>
+
+<a href="/register" class="btn btn-warning btn-lg">
+Register
+</a>
+
+<a
+href="/admin_login"
+class="btn btn-dark btn-lg">
+
+Admin Login
+
+</a>
+
+</div>
+
+</section>
+
+<!-- About -->
+
+<section class="container mt-5">
+
+<h2 class="text-center mb-4">
+
+About Project
+
+</h2>
+
+<p class="text-center">
+
+This project automatically analyzes student feedback
+using Artificial Intelligence and classifies it into
+Positive, Negative and Neutral categories.
+
+</p>
+
+</section>
+
+<!-- Features -->
+
+<section class="container mt-5 mb-5">
+
+    <div class="text-center mb-4">
+        <h2 class="fw-bold text-primary">Features</h2>
+        <p class="text-muted">Powerful tools to make feedback management smarter and easier.</p>
+    </div>
+
+    <div class="row g-4">
+
+        <div class="col-md-3">
+            <div class="feature-card blue-card">
+                <div class="feature-icon">📝</div>
+                <h4>Student Feedback</h4>
+                <p>
+                    Students can easily submit feedback and suggestions through the portal.
+                </p>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="feature-card green-card">
+                <div class="feature-icon">🤖</div>
+                <h4>AI Analysis</h4>
+                <p>
+                    Automatic sentiment analysis predicts Positive, Neutral and Negative feedback.
+                </p>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="feature-card yellow-card">
+                <div class="feature-icon">📊</div>
+                <h4>Admin Dashboard</h4>
+                <p>
+                    View charts, reports and analytics in an interactive dashboard.
+                </p>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="feature-card pink-card">
+                <div class="feature-icon">📄</div>
+                <h4>PDF & CSV Export</h4>
+                <p>
+                    Export feedback reports and analytics in PDF and CSV formats.
+                </p>
+            </div>
+        </div>
+
+    </div>
+
+</section>
+
+<!-- Footer -->
+
+<footer class="bg-dark text-white text-center mt-5 p-3">
+
+© 2026 Smart Feedback Portal | Avijit Roy
+
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<div class="modal fade" id="aboutModal" tabindex="-1">
+
+    <div class="modal-dialog modal-lg">
+
+        <div class="modal-content">
+
+            <div class="modal-header bg-primary text-white">
+
+                <h5 class="modal-title">
+                    About Smart Feedback Portal
+                </h5>
+
+                <button type="button" class="btn-close btn-close-white"
+                        data-bs-dismiss="modal"></button>
+
+            </div>
+
+            <div class="modal-body">
+
+                <p>
+                  Students can easily submit feedback and suggestions through a simple and 
+                  user-friendly interface, ensuring their opinions are collected efficiently.
+                </p>
+
+                <p>
+                  The system automatically analyzes every feedback using Artificial 
+                  Intelligence and classifies it as Positive, Neutral, or Negative.
+                </p>
+
+                <p>
+                  Administrators can view charts, statistics, and detailed reports to understand 
+                  overall student satisfaction and identify areas that require improvement.
+                </p>
+
+                <p>
+                  Feedback reports and analytics can be downloaded in PDF and CSV 
+                  formats for documentation, presentations, and future reference.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="modal fade" id="contactModal" tabindex="-1">
+
+    <div class="modal-dialog">
+
+        <div class="modal-content">
+
+            <div class="modal-header bg-primary text-white">
+
+                <h5 class="modal-title">
+                    Contact Us
+                </h5>
+
+                <button type="button"
+                        class="btn-close btn-close-white"
+                        data-bs-dismiss="modal"></button>
+
+            </div>
+
+            <div class="modal-body">
+
+                <h6>Email</h6>
+                <p>smartfeedbackportal@gmail.com</p>
+
+                <h6>Phone</h6>
+                <p>+91 79080 00489</p>
+
+                <h6>Address</h6>
+                <p>
+                    Midnapore - 721101<br>
+                    Paschim Medinipur<br>
+                    West Bengal, India
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+</body>
+
+</html>

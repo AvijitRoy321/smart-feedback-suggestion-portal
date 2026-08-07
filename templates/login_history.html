@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>
+
+Student Login History
+
+</title>
+
+<link rel="icon"
+      type="image/png"
+      href="{{ url_for('static', filename='images/favicon.png') }}">
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+rel="stylesheet">
+
+<link rel="stylesheet"
+href="{{ url_for('static', filename='style.css') }}">
+
+<style>
+
+body{
+
+background:#f5f7fb;
+
+}
+
+.card{
+
+border:none;
+
+border-radius:15px;
+
+box-shadow:0 4px 15px rgba(0,0,0,.08);
+
+}
+
+.table{
+
+background:white;
+
+border-radius:12px;
+
+overflow:hidden;
+
+}
+
+thead{
+
+background:#212529;
+
+color:white;
+
+}
+
+.badge{
+
+font-size:14px;
+
+}
+
+.search-box{
+
+max-width:400px;
+
+}
+
+.dashboard-card{
+
+transition:.3s;
+
+}
+
+.dashboard-card:hover{
+
+transform:translateY(-4px);
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container-fluid p-4">
+
+<div class="d-flex
+justify-content-between
+align-items-center
+mb-4">
+
+<h2>
+
+📜 Student Login History
+
+</h2>
+
+<div>
+
+<a href="/dashboard_v2"
+class="btn btn-secondary">
+
+⬅ Dashboard
+
+</a>
+
+</div>
+
+</div>
+
+<!-- Dashboard Cards -->
+
+<div class="row mb-4">
+
+<div class="col-md-3">
+
+<div class="card dashboard-card text-center">
+
+<div class="card-body">
+
+<h6>Total Logins</h6>
+
+<h2 class="text-primary">
+
+{{ total_logins }}
+
+</h2>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-md-3">
+
+<div class="card dashboard-card text-center">
+
+<div class="card-body">
+
+<h6>Online Students</h6>
+
+<h2 class="text-success">
+
+{{ online_students }}
+
+</h2>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-md-3">
+
+<div class="card dashboard-card text-center">
+
+<div class="card-body">
+
+<h6>Logged Out</h6>
+
+<h2 class="text-danger">
+
+{{ logged_out }}
+
+</h2>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-md-3">
+
+<div class="card dashboard-card text-center">
+
+<div class="card-body">
+
+<h6>Today's Logins</h6>
+
+<h2 class="text-warning">
+
+{{ today_logins }}
+
+</h2>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- Search -->
+
+<div class="card mb-4">
+
+<div class="card-body">
+
+<form method="GET"
+action="/login_history">
+
+<div class="row">
+
+<div class="col-md-6">
+
+<input
+
+type="text"
+
+name="search"
+
+value="{{ search }}"
+
+placeholder="🔍 Search by student name or email..."
+
+class="form-control">
+
+</div>
+
+<div class="col-md-2">
+
+<button
+class="btn btn-primary w-100">
+
+Search
+
+</button>
+
+</div>
+
+<div class="col-md-2">
+
+<a
+href="/login_history"
+
+class="btn btn-secondary w-100">
+
+Reset
+
+</a>
+
+</div>
+
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+<div class="card">
+
+<div class="card-body">
+
+<div class="mb-3 text-end">
+
+    <a href="/clear_login_history"
+       class="btn btn-danger"
+       onclick="return confirmClearHistory(event,this.href)">
+
+        🗑 Clear Login History
+
+    </a>
+
+</div>
+
+<div class="table-responsive">
+
+<table
+class="table
+table-bordered
+table-hover
+align-middle">
+
+<thead>
+
+<tr>
+
+<th>ID</th>
+
+<th>Name</th>
+
+<th>Email</th>
+
+<th>Login Time</th>
+
+<th>Logout Time</th>
+
+<th>Duration</th>
+
+<th>Status</th>
+
+<th>Action</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% if history %}
+
+{% for row in history %}
+
+<tr>
+
+<td>
+
+{{ loop.index }}
+
+</td>
+
+<td>
+
+<strong>
+
+{{ row.student_name }}
+
+</strong>
+
+</td>
+
+<td>
+
+{{ row.email }}
+
+</td>
+
+<td>
+
+<span class="badge bg-primary">
+
+{{ row.login_time }}
+
+</span>
+
+</td>
+
+<td>
+
+{% if row.logout_time %}
+
+<span class="badge bg-secondary">
+
+{{ row.logout_time }}
+
+</span>
+
+{% else %}
+
+<span class="badge bg-warning text-dark">
+
+Still Online
+
+</span>
+
+{% endif %}
+
+</td>
+
+<td>
+
+{% if row.duration == "Still Online" %}
+
+<span class="badge bg-info">
+
+Still Online
+
+</span>
+
+{% else %}
+
+<span class="badge bg-dark">
+
+{{ row.duration }}
+
+</span>
+
+{% endif %}
+
+</td>
+
+<td>
+
+{% if row.status=="Online" %}
+
+<span class="badge bg-success">
+
+🟢 Online
+
+</span>
+
+{% else %}
+
+<span class="badge bg-danger">
+
+🔴 Logged Out
+
+</span>
+
+{% endif %}
+
+</td>
+
+<td>
+
+    <a href="/delete_login_history/{{ row.id }}"
+       class="btn btn-danger btn-sm"
+       onclick="return confirmDeleteHistory(event,this.href)">
+
+        🗑 Delete
+
+    </a>
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+{% else %}
+
+<tr>
+
+<td colspan="8" class="text-center">
+
+<div class="alert alert-warning mb-0">
+
+No Login History Found.
+
+</div>
+
+</td>
+
+</tr>
+
+{% endif %}
+
+</tbody>
+
+<tfoot>
+
+<tr class="table-dark">
+
+<td colspan="8">
+
+<div class="d-flex justify-content-between align-items-center">
+
+<div>
+
+<b>Total Records :</b>
+
+{{ total_logins }}
+
+</div>
+
+<div>
+
+<b>Online :</b>
+
+<span class="badge bg-success">
+
+{{ online_students }}
+
+</span>
+
+&nbsp;&nbsp;
+
+<b>Logged Out :</b>
+
+<span class="badge bg-danger">
+
+{{ logged_out }}
+
+</span>
+
+</div>
+
+</div>
+
+</td>
+
+</tr>
+
+</tfoot>
+
+</table>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- Action Buttons -->
+
+<div class="row mt-4">
+
+<div class="col text-center">
+
+<a href="/export_login_history_excel"
+
+class="btn btn-success me-2">
+
+📊 Export Login History Excel
+
+</a>
+
+<a href="/pdf_login_history"
+
+class="btn btn-danger me-2">
+
+📑 Export PDF
+
+</a>
+
+<a href="/login_history"
+
+class="btn btn-primary me-2">
+
+🔄 Refresh
+
+</a>
+
+<a href="/dashboard_v2"
+
+class="btn btn-secondary">
+
+🏠 Dashboard
+
+</a>
+
+</div>
+
+</div>
+
+<!-- Information Card -->
+
+<div class="card mt-4">
+
+<div class="card-body">
+
+<h5>
+
+📊 Login History Summary
+
+</h5>
+
+<hr>
+
+<div class="row">
+
+<div class="col-md-3">
+
+<p>
+
+<b>Total Login Records</b>
+
+</p>
+
+<h3 class="text-primary">
+
+{{ total_logins }}
+
+</h3>
+
+</div>
+
+<div class="col-md-3">
+
+<p>
+
+<b>Currently Online</b>
+
+</p>
+
+<h3 class="text-success">
+
+{{ online_students }}
+
+</h3>
+
+</div>
+
+<div class="col-md-3">
+
+<p>
+
+<b>Logged Out</b>
+
+</p>
+
+<h3 class="text-danger">
+
+{{ logged_out }}
+
+</h3>
+
+</div>
+
+<div class="col-md-3">
+
+<p>
+
+<b>Today's Login</b>
+
+</p>
+
+<h3 class="text-warning">
+
+{{ today_logins }}
+
+</h3>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- Auto Refresh Information -->
+
+<div class="text-center mt-4">
+
+    <small class="text-muted">
+
+        Page automatically reflects the latest login records after refresh.
+
+    </small>
+
+</div>
+
+<hr>
+
+<footer class="text-center mt-4 mb-3">
+
+    <p class="text-muted">
+
+        Smart Feedback & Suggestion Portal
+
+        <br>
+
+        Login History Management System
+
+        <br>
+
+        Developed using Flask • Python • SQLite • Bootstrap
+
+    </p>
+
+</footer>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+
+function confirmDeleteHistory(event,url){
+
+    event.preventDefault();
+
+    Swal.fire({
+
+        title:"Delete Login History?",
+
+        text:"This record will be permanently deleted.",
+
+        icon:"warning",
+
+        showCancelButton:true,
+
+        confirmButtonColor:"#d33",
+
+        cancelButtonColor:"#6c757d",
+
+        confirmButtonText:"🗑 Delete",
+
+        cancelButtonText:"Cancel"
+
+    }).then((result)=>{
+
+        if(result.isConfirmed){
+
+            window.location.href=url;
+
+        }
+
+    });
+
+}
+
+function confirmClearHistory(event,url){
+
+    event.preventDefault();
+
+    Swal.fire({
+
+        title:"Clear Entire Login History?",
+
+        text:"All login history records will be permanently deleted.",
+
+        icon:"warning",
+
+        showCancelButton:true,
+
+        confirmButtonColor:"#d33",
+
+        cancelButtonColor:"#6c757d",
+
+        confirmButtonText:"🗑 Clear All",
+
+        cancelButtonText:"Cancel"
+
+    }).then((result)=>{
+
+        if(result.isConfirmed){
+
+            window.location.href=url;
+
+        }
+
+    });
+
+}
+
+</script>
+
+<script>
+
+function refreshPage(){
+
+    location.reload();
+
+}
+
+// Auto refresh every 30 seconds
+setInterval(refreshPage,30000);
+
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+
+const params = new URLSearchParams(window.location.search);
+
+if (params.get("deleted") === "1") {
+
+    Swal.fire({
+        icon: "success",
+        title: "Deleted!",
+        text: "Login history deleted successfully.",
+        timer: 1800,
+        showConfirmButton: false
+    });
+
+    window.history.replaceState({}, document.title, "/login_history");
+}
+
+if (params.get("cleared") === "1") {
+
+    Swal.fire({
+        icon: "success",
+        title: "Completed!",
+        text: "All login history has been cleared successfully.",
+        timer: 1800,
+        showConfirmButton: false
+    });
+
+    window.history.replaceState({}, document.title, "/login_history");
+}
+
+</script>
+
+</body>
+
+</html>

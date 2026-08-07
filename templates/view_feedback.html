@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<title>
+
+My Feedback
+
+</title>
+
+<link rel="icon"
+      type="image/png"
+      href="{{ url_for('static', filename='images/favicon.png') }}">
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+rel="stylesheet">
+
+<link
+rel="stylesheet"
+href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body class="bg-light">
+
+{% include "includes/alerts.html" %}
+
+<div class="container py-5">
+
+<div class="text-center mb-4">
+
+<h2 class="fw-bold text-primary">
+
+📋 My Feedback History
+
+</h2>
+
+<p class="text-muted">
+
+View all your submitted feedback and AI analysis.
+
+</p>
+
+</div>
+
+{% for submission in submissions %}
+
+<div class="card shadow-lg border-0 rounded-4 mb-4">
+
+    <div class="card-header bg-primary text-white d-flex justify-content-between">
+
+        <h5 class="mb-0">
+            📋 Submission #{{ submission.submission_id }}
+        </h5>
+
+        <small>
+            🕒 {{ submission.date }}
+        </small>
+
+    </div>
+
+    <div class="card-body">
+
+        {% for row in submission["items"] %}
+        <div class="border rounded-3 p-4 mb-3 bg-light">
+
+            <h4 class="fw-bold">
+
+                {% if row.category=="Course" %}
+                    📚 Course
+                {% elif row.category=="Faculty" %}
+                    👨‍🏫 Faculty
+                {% else %}
+                    🏫 Facility
+                {% endif %}
+
+            </h4>
+
+            <br>
+
+            <strong>Rating:</strong>
+
+            {{ row.feedback.split('\n')[0] }}
+
+            <br><br>
+
+            <strong>Comment:</strong>
+
+            <div style="white-space:pre-line;">
+                {{ row.feedback.split('\n',1)[1] if '\n' in row.feedback else row.feedback }}
+            </div>
+
+            <br>
+
+            <strong>Sentiment:</strong>
+
+            {% if row.sentiment=="Positive" %}
+                <span class="badge bg-success">😊 Positive</span>
+
+            {% elif row.sentiment=="Negative" %}
+                <span class="badge bg-danger">😞 Negative</span>
+
+            {% else %}
+                <span class="badge bg-warning text-dark">😐 Neutral</span>
+
+            {% endif %}
+
+            <div class="text-end mt-3">
+
+                <a href="/delete_feedback/{{ row.id }}"
+                   class="btn btn-danger btn-sm"
+                   onclick="return confirmDelete(event,this.href)">
+
+                    🗑 Delete
+
+                </a>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+        {% if submission.overall_suggestion %}
+
+        <div class="alert alert-info">
+
+            <h5 class="fw-bold">
+                💬 Overall Student Suggestion
+            </h5>
+
+            {{ submission.overall_suggestion }}
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endfor %}
+
+<div class="text-center mt-4">
+
+    <a href="/dashboard"
+       class="btn btn-secondary btn-lg">
+
+        🏠 Back to Dashboard
+
+    </a>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+
+function confirmDelete(event,url){
+
+    event.preventDefault();
+
+    Swal.fire({
+
+        title:'Delete Record?',
+
+        text:'This action cannot be undone.',
+
+        icon:'warning',
+
+        showCancelButton:true,
+
+        confirmButtonColor:'#d33',
+
+        cancelButtonColor:'#6c757d',
+
+        confirmButtonText:'🗑 Delete',
+
+        cancelButtonText:'Cancel'
+
+    }).then((result)=>{
+
+        if(result.isConfirmed){
+
+            window.location.href=url;
+
+        }
+
+    });
+
+}
+
+</script>
+
+<script>
+
+const params = new URLSearchParams(window.location.search);
+
+if (params.get("deleted") === "1") {
+
+    Swal.fire({
+
+        icon: "success",
+
+        title: "Deleted!",
+
+        text: "Feedback deleted successfully.",
+
+        timer: 1800,
+
+        showConfirmButton: false
+
+    });
+
+    window.history.replaceState({}, document.title, "/view_feedback");
+
+}
+
+</script>
+
+</div>
+
+</body>
+
+</html>

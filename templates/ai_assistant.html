@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>
+
+AI Assistant
+
+</title>
+
+<link rel="icon"
+      type="image/png"
+      href="{{ url_for('static', filename='images/favicon.png') }}">
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+rel="stylesheet">
+
+<link rel="stylesheet"
+href="{{ url_for('static', filename='style.css') }}">
+
+<style>
+
+body{
+
+background:#eef3f8;
+
+}
+
+.chat-box{
+
+height:450px;
+
+overflow-y:auto;
+
+background:white;
+
+border-radius:15px;
+
+padding:20px;
+
+box-shadow:0 5px 20px rgba(0,0,0,.15);
+
+}
+
+.user{
+
+text-align:right;
+
+margin:10px;
+
+}
+
+.ai{
+
+text-align:left;
+
+margin:10px;
+
+}
+
+.user span{
+
+background:#0d6efd;
+
+color:white;
+
+padding:10px 15px;
+
+border-radius:20px;
+
+display:inline-block;
+
+}
+
+.ai span{
+
+background:#e9ecef;
+
+padding:10px 15px;
+
+border-radius:20px;
+
+display:inline-block;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container mt-5">
+
+<h2 class="text-center mb-4">
+
+🤖 Smart AI Assistant
+
+</h2>
+
+<div class="chat-box">
+
+{% if question %}
+
+<div class="user">
+
+<span>
+
+{{ question }}
+
+</span>
+
+</div>
+
+<div class="ai">
+
+<span>
+
+{{ answer }}
+
+</span>
+
+</div>
+
+{% endif %}
+
+</div>
+
+<form
+method="POST"
+class="mt-4">
+
+<div class="input-group">
+
+<input
+
+type="text"
+
+name="question"
+
+class="form-control"
+
+placeholder="Ask anything..."
+
+required>
+
+<button
+class="btn btn-primary">
+
+Send
+
+</button>
+
+</div>
+
+</form>
+
+<div class="text-center mt-4">
+
+<a href="/dashboard_v2"
+
+class="btn btn-secondary">
+
+← Dashboard
+
+</a>
+
+</div>
+
+</div>
+
+</body>
+
+</html>

@@ -1,0 +1,1467 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Admin Dashboard</title>
+
+    <link rel="icon"
+        type="image/png"
+        href="{{ url_for('static', filename='images/favicon.png') }}">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <style>
+
+        body{
+            background:#f4f7fb;
+            transition:.4s;
+        }
+
+        .dark{
+            background:#212529;
+            color:white;
+        }
+
+        .dashboard-title{
+            font-weight:bold;
+            color:#0d6efd;
+        }
+
+        .card{
+            border:none;
+            border-radius:15px;
+            box-shadow:0 5px 15px rgba(0,0,0,.15);
+            transition:.3s;
+        }
+
+        .card:hover{
+            transform:translateY(-5px);
+        }
+
+        #pieChart,#barChart{
+            width:100%;
+            height:420px;
+            background:white;
+            border-radius:15px;
+            box-shadow:0 5px 15px rgba(0,0,0,.15);
+        }
+
+        .dark #pieChart,
+        .dark #barChart{
+            background:#2d3436;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+{% include "includes/alerts.html" %}
+
+<div class="container-fluid py-4">
+
+<div class="container">
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+<div>
+
+<div class="d-flex align-items-center justify-content-between flex-wrap">
+
+    <div class="d-flex align-items-center">
+
+        <img
+            src="{{ url_for('static', filename='images/logo.png') }}"
+            alt="SFSP Logo"
+            width="80"
+            class="logo me-3">
+
+        <div>
+
+            <h2 class="fw-bold text-primary mb-1">
+
+                Smart Feedback & Suggestion Portal
+
+            </h2>
+
+            <p class="text-muted mb-0">
+
+                Administrator Dashboard
+
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+<h4 class="mt-3">
+
+Welcome Administrator 👋
+
+</h4>
+
+<p id="liveTime" class="time-date">
+    📅 {{ current_time }}
+</p>
+
+<p>
+
+AI Powered Student Feedback Analytics Dashboard
+
+</p>
+
+</div>
+
+<div class="d-flex align-items-center">
+
+    <!-- Dark Mode Button -->
+    <button
+        class="btn btn-dark"
+        onclick="darkMode()">
+
+        🌙 Dark Mode
+
+    </button>
+
+    <!-- Notification Button -->
+    <a href="/notifications"
+       class="btn btn-light position-relative ms-2"
+       title="Notifications">
+
+        🔔
+
+        {% if notification_count > 0 %}
+        <span
+            class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+
+            {{ notification_count }}
+
+        </span>
+        {% endif %}
+
+    </a>
+
+</div>
+
+</div>
+
+<hr>
+
+<div class="row g-4">
+
+<div class="col-lg-3 col-md-6">
+
+<div class="card bg-primary text-white">
+
+<div class="card-body text-center">
+
+<h5>Total Feedback</h5>
+
+<h1 class="counter" data-target="{{ total }}">0</h1>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-lg-3 col-md-6">
+
+<div class="card bg-success text-white">
+
+<div class="card-body text-center">
+
+<h5>Positive</h5>
+
+<h1 class="counter" data-target="{{ positive }}">0</h1>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-lg-3 col-md-6">
+
+<div class="card bg-danger text-white">
+
+<div class="card-body text-center">
+
+<h5>Negative</h5>
+
+<h1 class="counter" data-target="{{ negative }}">0</h1>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-lg-3 col-md-6">
+
+<div class="card bg-warning">
+
+<div class="card-body text-center">
+
+<h5>Neutral</h5>
+
+<h1 class="counter" data-target="{{ neutral }}">0</h1>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="row g-4 mt-2">
+
+    <div class="col-lg-3 col-md-6">
+
+        <div class="card border-start border-primary border-5">
+
+            <div class="card-body text-center">
+
+                <h5>👨‍🎓 Total Students</h5>
+
+                <h2 class="counter" data-target="{{ total_students }}">0</h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-3 col-md-6">
+
+        <div class="card border-start border-success border-5">
+
+            <div class="card-body text-center">
+
+                <h5>🟢 Online Students</h5>
+
+                <h2 class="counter" data-target="{{ online_students }}">0</h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-3 col-md-6">
+
+        <div class="card border-start border-warning border-5">
+
+            <div class="card-body text-center">
+
+                <h5>📝 Today's Feedback</h5>
+
+                <h2 class="counter" data-target="{{ today_feedback }}">0</h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-3 col-md-6">
+
+        <div class="card border-start border-info border-5">
+
+            <div class="card-body text-center">
+
+                <h5>📅 Today's Registrations</h5>
+
+                <h2 class="counter" data-target="{{ today_students }}">0</h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</div>
+
+<div class="row mt-5">
+
+<div class="col-lg-6 mb-4">
+
+<div id="pieChart"></div>
+
+</div>
+
+<div class="col-lg-6 mb-4">
+
+<div id="barChart"></div>
+
+</div>
+
+</div>
+
+
+<!-- ===================== -->
+<!-- Pie Chart -->
+<!-- ===================== -->
+
+<script>
+
+var data=[{
+
+    labels: {{ pie_labels|tojson }},
+
+    values: {{ pie_values|tojson }},
+
+    type:"pie",
+
+    hole:0.45,
+
+    textinfo:"label+percent",
+
+    marker:{
+
+        colors:[
+
+            "#198754",
+
+            "#dc3545",
+
+            "#ffc107"
+
+        ]
+
+    }
+
+}];
+
+var layout={
+
+    title:"Feedback Sentiment Analysis",
+
+    paper_bgcolor:"white",
+
+    plot_bgcolor:"white",
+
+    font:{
+
+        family:"Poppins"
+
+    }
+
+};
+
+Plotly.newPlot(
+
+"pieChart",
+
+data,
+
+layout,
+
+{responsive:true}
+
+);
+
+</script>
+
+
+<!-- ===================== -->
+<!-- Bar Chart -->
+<!-- ===================== -->
+
+<script>
+
+var barData=[{
+
+    x:{{ bar_category|tojson }},
+
+    y:{{ bar_count|tojson }},
+
+    type:"bar",
+
+    marker:{
+
+        color:[
+
+            "#0d6efd",
+
+            "#198754",
+
+            "#ffc107"
+
+        ]
+
+    }
+
+}];
+
+var barLayout={
+
+    title:"Feedback Category Analysis",
+
+    xaxis:{
+
+        title:"Category"
+
+    },
+
+    yaxis:{
+
+        title:"Number of Feedback"
+
+    },
+
+    paper_bgcolor:"white",
+
+    plot_bgcolor:"white",
+
+    font:{
+
+        family:"Poppins"
+
+    }
+
+};
+
+Plotly.newPlot(
+
+"barChart",
+
+barData,
+
+barLayout,
+
+{responsive:true}
+
+);
+
+</script>
+
+<hr class="mt-5">
+
+<div class="card shadow mt-4">
+
+<div class="card-header bg-dark text-white">
+
+<h4>🤖 AI Insights</h4>
+
+</div>
+
+<div class="card-body">
+
+<ul class="list-group">
+
+<li class="list-group-item">
+
+<b>Total Feedback :</b> {{ total }}
+
+</li>
+
+<li class="list-group-item list-group-item-success">
+
+😊 Positive Feedback :
+
+<b>{{ positive_percent }}%</b>
+
+</li>
+
+<li class="list-group-item list-group-item-danger">
+
+😞 Negative Feedback :
+
+<b>{{ negative_percent }}%</b>
+
+</li>
+
+<li class="list-group-item list-group-item-warning">
+
+😐 Neutral Feedback :
+
+<b>{{ neutral_percent }}%</b>
+
+</li>
+
+<li class="list-group-item">
+
+📚 Most Discussed Category :
+
+<b>{{ top_category }}</b>
+
+</li>
+
+<li class="list-group-item list-group-item-info">
+
+💡 AI Recommendation :
+
+<h6 class="fw-bold mb-3">
+
+💡 AI Recommendations
+
+</h6>
+
+<ul class="list-group">
+
+{% for item in recommendation %}
+
+<li class="list-group-item">
+
+🤖 {{ item }}
+
+</li>
+
+{% endfor %}
+
+</ul>
+
+</li>
+
+</ul>
+
+</div>
+
+</div>
+
+<hr class="mt-5">
+
+<div class="card shadow mt-4">
+
+    <div class="card-header bg-primary text-white">
+
+        <h4>📊 Overall Sentiment Progress</h4>
+
+    </div>
+
+    <div class="card-body">
+
+        <h6>😊 Positive ({{ positive_percent }}%)</h6>
+
+        <div class="progress mb-4" style="height:25px;">
+
+            <div
+                class="progress-bar progress-bar-striped progress-bar-animated bg-success"
+                role="progressbar"
+                style="width: {{ positive_percent }}%;">
+
+                {{ positive_percent }}%
+
+            </div>
+
+        </div>
+
+        <h6>😞 Negative ({{ negative_percent }}%)</h6>
+
+        <div class="progress mb-4" style="height:25px;">
+
+            <div
+                class="progress-bar progress-bar-striped progress-bar-animated bg-danger"
+                role="progressbar"
+                style="width: {{ negative_percent }}%;">
+
+                {{ negative_percent }}%
+
+            </div>
+
+        </div>
+
+        <h6>😐 Neutral ({{ neutral_percent }}%)</h6>
+
+        <div class="progress" style="height:25px;">
+
+            <div
+                class="progress-bar progress-bar-striped progress-bar-animated bg-warning text-dark"
+                role="progressbar"
+                style="width: {{ neutral_percent }}%;">
+
+                {{ neutral_percent }}%
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<hr class="mt-5">
+
+<div class="card shadow">
+
+    <div class="card-header bg-success text-white">
+
+        <h4>⭐ Overall Satisfaction Score</h4>
+
+    </div>
+
+    <div class="card-body text-center">
+
+            <h1>
+                {% if total == 0 %}
+                    <h1>--/100</h1>
+                    <p class="text-muted">No feedback available</p>
+                {% else %}
+                    <h1>{{ satisfaction_score }}/100</h1>
+                {% endif %}
+            </h1>
+
+        <h3>{{ satisfaction_stars }}</h3>
+
+        <p class="text-muted">
+
+            Overall Student Satisfaction
+
+        </p>
+
+    </div>
+
+</div>
+
+<div class="card shadow mt-4">
+
+<div class="card-header bg-dark text-white">
+
+<h4>
+
+❤️ AI Health Score
+
+</h4>
+
+</div>
+
+<div class="card-body text-center">
+
+<h1>
+
+{% if health_score is none %}
+    --/100
+{% else %}
+    {{ health_score }}/100
+{% endif %}
+
+</h1>
+
+<div class="progress mb-4"
+style="height:30px;">
+
+<div
+class="progress-bar bg-{{ health_color }} progress-bar-striped progress-bar-animated"
+style="width:{{ health_score }}%;">
+
+{{ health_score }}%
+
+</div>
+
+</div>
+
+<h3 class="text-{{ health_color }}">
+
+{{ health_status }}
+
+</h3>
+
+</div>
+
+</div>
+
+<hr>
+
+<p>
+
+This score is calculated using the sentiment analysis results to estimate the overall student satisfaction level.
+
+</p>
+
+<div class="card shadow mt-4">
+
+<div class="card-header bg-dark text-white">
+
+<h4>
+
+🧠 AI Prediction
+
+</h4>
+
+</div>
+
+<div class="card-body">
+
+<h5>
+
+{{ prediction }}
+
+</h5>
+
+</div>
+
+</div>
+
+<div class="card shadow mt-4">
+
+    <div class="card-header bg-dark text-white">
+
+        <h4>🖥️ System Status</h4>
+
+    </div>
+
+    <div class="card-body">
+
+        <table class="table table-bordered table-hover text-center">
+
+            <thead class="table-light">
+
+                <tr>
+
+                    <th>Service</th>
+
+                    <th>Status</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                <tr>
+
+                    <td>Database</td>
+
+                    <td>
+
+                        <span class="badge bg-{{ database_color }}">
+
+                            {{ database_status }}
+
+                        </span>
+
+                    </td>
+
+                </tr>
+
+                <tr>
+
+                    <td>AI Engine</td>
+
+                    <td>
+
+                        <span class="badge bg-{{ ai_color }}">
+
+                            {{ ai_status }}
+
+                        </span>
+
+                    </td>
+
+                </tr>
+
+                <tr>
+
+                    <td>Notification Service</td>
+
+                    <td>
+
+                        <span class="badge bg-{{ notification_color }}">
+
+                            {{ notification_status }}
+
+                        </span>
+
+                    </td>
+
+                </tr>
+
+                <tr>
+
+                    <td>Timezone</td>
+
+                    <td>
+
+                        <span class="badge bg-primary">
+
+                            {{ timezone }}
+
+                        </span>
+
+                    </td>
+
+                </tr>
+
+                <tr>
+
+                    <td>Session Timeout</td>
+
+                    <td>
+
+                        <span class="badge bg-warning text-dark">
+
+                            {{ session_timeout }}
+
+                        </span>
+
+                    </td>
+
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+<div class="card shadow mt-4">
+
+<div class="card-header bg-info text-white">
+
+<h4>
+
+📚 Category Statistics
+
+</h4>
+
+</div>
+
+<div class="card-body">
+
+<table class="table table-bordered text-center">
+
+<thead>
+
+<tr>
+
+<th>Category</th>
+
+<th>Total Feedback</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for i in range(bar_category|length) %}
+
+<tr>
+
+<td>{{ bar_category[i] }}</td>
+
+<td>{{ bar_count[i] }}</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+<div class="card shadow mt-4">
+
+<div class="card-header bg-primary text-white">
+
+<h3>📈 Monthly Feedback Trend</h3>
+
+</div>
+
+<div class="card-body">
+
+<canvas id="trendChart" style="height:400px;"></canvas>
+
+</div>
+
+</div>
+
+<div class="card shadow mt-4">
+
+<div class="card-header bg-secondary text-white">
+
+<h4>
+
+📝 Recent Feedback
+
+</h4>
+
+</div>
+
+<div class="card-body">
+
+<table class="table table-striped table-hover">
+
+<thead>
+
+<tr>
+
+<th>Student</th>
+
+<th>Category</th>
+
+<th>Sentiment</th>
+
+<th>Date</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for row in recent_feedback %}
+
+<tr>
+
+<td>{{ row.student_name }}</td>
+
+<td>{{ row.category }}</td>
+
+<td>
+
+{% if row.sentiment=="Positive" %}
+
+<span class="badge bg-success">
+
+Positive
+
+</span>
+
+{% elif row.sentiment=="Negative" %}
+
+<span class="badge bg-danger">
+
+Negative
+
+</span>
+
+{% else %}
+
+<span class="badge bg-warning text-dark">
+
+Neutral
+
+</span>
+
+{% endif %}
+
+</td>
+
+<td>{{ row.date }}</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+<div class="card shadow mt-4">
+
+<div class="card-header bg-primary text-white">
+
+<h4>📋 Complete Feedback Records</h4>
+
+</div>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+    <input
+        type="text"
+        id="search"
+        class="form-control"
+        placeholder="🔍 Search Student Name..."
+        onkeyup="searchTable()"
+        style="width:350px;">
+
+    <a href="/delete_all_feedback"
+       class="btn btn-danger"
+       onclick="return confirmDelete(event,this.href)">
+
+        🗑 Delete All Feedback
+
+    </a>
+
+</div>
+
+<div class="card-body">
+
+<div class="table-responsive">
+
+<table
+id="feedbackTable"
+class="table table-striped table-hover table-bordered">
+
+<thead>
+
+<tr>
+
+<th>S.No.</th>
+<th>Submission</th>
+<th>Student</th>
+<th>Category</th>
+<th>Feedback</th>
+<th>Sentiment</th>
+<th>Student Suggestion</th>
+<th>AI Suggestion</th>
+<th>Date</th>
+<th>Action</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for row in feedback %}
+
+<tr>
+
+{% if loop.first or feedback[loop.index0-1].submission_id != row.submission_id %}
+
+<td rowspan="3" class="align-middle text-center">
+
+    {{ (loop.index0 // 3) + 1 }}
+
+</td>
+
+{% endif %}
+
+{% if loop.first or feedback[loop.index0-1].submission_id != row.submission_id %}
+
+<td rowspan="3" class="align-middle text-center">
+
+    <span class="badge bg-primary fs-6">
+        {{ row.submission_id }}
+    </span>
+
+</td>
+
+<td rowspan="3" class="align-middle">
+
+    👤 {{ row.student_name }}
+
+</td>
+
+{% endif %}
+
+<td>{{ row.category }}</td>
+
+<td style="white-space: pre-line;">
+    {{ row.feedback }}
+</td>
+
+<td>
+
+{% if row.sentiment=="Positive" %}
+
+<span class="badge bg-success">Positive</span>
+
+{% elif row.sentiment=="Negative" %}
+
+<span class="badge bg-danger">Negative</span>
+
+{% else %}
+
+<span class="badge bg-warning text-dark">Neutral</span>
+
+{% endif %}
+
+</td>
+
+{% if loop.first or feedback[loop.index0-1].submission_id != row.submission_id %}
+
+<td rowspan="3" class="align-middle">
+
+    {% if row.overall_suggestion %}
+
+        💬 {{ row.overall_suggestion }}
+
+    {% endif %}
+
+</td>
+
+{% endif %}
+
+<td>
+    {{ row.suggestion }}
+</td>
+
+<td>{{ row.date }}</td>
+
+{% if loop.first or feedback[loop.index0-1].submission_id != row.submission_id %}
+
+<td rowspan="3" class="align-middle text-center">
+
+    <a href="/admin_delete_submission/{{ row.submission_id }}"
+       class="btn btn-danger btn-sm"
+       onclick="return confirmDelete(event,this.href)">
+
+        🗑 Delete
+
+    </a>
+
+</td>
+
+{% endif %}
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="row mt-4">
+
+    <div class="col text-center">
+
+        <a href="/export_excel" class="btn btn-success dashboard-btn me-2">
+            📊 Export Excel
+        </a>
+
+        <a href="/pdf" class="btn btn-danger dashboard-btn me-2">
+            📑 Download PDF
+        </a>
+
+        <a href="/create_admin" class="btn btn-primary dashboard-btn me-2">
+            ➕ Add Admin
+        </a>
+
+        <a href="/admin_management"
+            class="btn btn-info">
+            👨‍💼 Manage Admins
+        </a>
+
+        <a href="/student_management" class="btn btn-info dashboard-btn">
+            👨‍🎓 Students
+        </a>
+
+        <a href="/login_history" class="btn btn-primary dashboard-btn me-2">
+            📜 Login History
+        </a>
+
+        <a href="/ai_assistant" class="btn btn-dark dashboard-btn me-2">
+            🤖 AI Assistant
+        </a>
+
+        <a href="/admin_logout" class="btn btn-secondary dashboard-btn">
+            🚪 Logout
+        </a>
+
+    </div>
+
+</div>
+
+<footer class="text-center mt-5">
+
+<hr>
+
+<h5>
+
+Smart Feedback & Suggestion Portal
+
+</h5>
+
+<p>
+
+AI Powered Student Feedback Analytics System
+
+</p>
+
+<p>
+
+Developed By
+
+<b>Avijit Roy</b>
+
+</p>
+
+<p>
+
+©2026
+
+</p>
+
+</footer>
+
+<script>
+
+function searchTable(){
+
+let input=document.getElementById("search");
+
+let filter=input.value.toUpperCase();
+
+let table=document.getElementById("feedbackTable");
+
+let tr=table.getElementsByTagName("tr");
+
+for(let i=1;i<tr.length;i++){
+
+let td=tr[i].getElementsByTagName("td")[1];
+
+if(td){
+
+let txt=td.textContent;
+
+if(txt.toUpperCase().indexOf(filter)>-1){
+
+tr[i].style.display="";
+
+}
+
+else{
+
+tr[i].style.display="none";
+
+}
+
+}
+
+}
+
+}
+
+function darkMode(){
+
+document.body.classList.toggle("bg-dark");
+
+document.body.classList.toggle("text-white");
+
+}
+
+</script>
+
+<script>
+
+new Chart(
+
+document.getElementById("trendChart"),
+
+{
+
+type:"line",
+
+data:{
+
+labels:{{ trend_dates|tojson }},
+
+datasets:[{
+
+label:"Feedback",
+
+data:{{ trend_counts|tojson }},
+
+borderColor:"blue",
+
+backgroundColor:"rgba(0,123,255,0.2)",
+
+fill:true,
+
+tension:0.4
+
+}]
+
+},
+
+options:{
+
+responsive:true,
+
+plugins:{
+
+legend:{
+
+display:true
+
+}
+
+}
+
+}
+
+}
+
+);
+
+</script>
+
+<script>
+
+document.addEventListener("DOMContentLoaded",function(){
+
+    const cards=document.querySelectorAll(".stat-card");
+
+    cards.forEach((card,index)=>{
+
+        card.style.opacity=0;
+
+        card.style.transform="translateY(30px)";
+
+        setTimeout(()=>{
+
+            card.style.transition=".6s";
+
+            card.style.opacity=1;
+
+            card.style.transform="translateY(0px)";
+
+        },index*150);
+
+    });
+
+});
+
+</script>
+
+<script>
+
+function updateClock() {
+
+    const now = new Date();
+
+    const day = String(now.getDate()).padStart(2, '0');
+
+    const months = [
+        "January","February","March","April","May","June",
+        "July","August","September","October","November","December"
+    ];
+
+    const month = months[now.getMonth()];
+
+    const year = now.getFullYear();
+
+    let hours = now.getHours();
+
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+
+    const ampm = hours >= 12 ? "PM" : "AM";
+
+    hours = hours % 12;
+    hours = hours ? hours : 12;
+
+    const timeString =
+        `📅 ${day} ${month} ${year} | ${hours}:${minutes}:${seconds} ${ampm}`;
+
+    document.getElementById("liveTime").innerHTML = timeString;
+
+}
+
+updateClock();
+
+setInterval(updateClock, 1000);
+
+</script>
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const counters = document.querySelectorAll(".counter");
+
+    counters.forEach(counter => {
+
+        const target = Number(counter.getAttribute("data-target"));
+
+        let current = 0;
+
+        const increment = Math.max(1, Math.ceil(target / 50));
+
+        function updateCounter() {
+
+            current += increment;
+
+            if (current >= target) {
+
+                counter.innerText = target;
+
+            } else {
+
+                counter.innerText = current;
+
+                requestAnimationFrame(updateCounter);
+
+            }
+
+        }
+
+        updateCounter();
+
+    });
+
+});
+
+</script>
+
+<script>
+
+function confirmDelete(event, url){
+
+    event.preventDefault();
+
+    Swal.fire({
+
+        title: "Delete Feedback?",
+
+        text: "This action cannot be undone.",
+
+        icon: "warning",
+
+        showCancelButton: true,
+
+        confirmButtonColor: "#dc3545",
+
+        cancelButtonColor: "#6c757d",
+
+        confirmButtonText: "🗑 Delete",
+
+        cancelButtonText: "Cancel"
+
+    }).then((result)=>{
+
+        if(result.isConfirmed){
+
+            window.location.href = url;
+
+        }
+
+    });
+
+}
+
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+</body>
+
+</html>

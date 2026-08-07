@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Environment
+.env
+venv/
+.venv/
+
+# VS Code
+.vscode/
+
+# Logs
+app.log
+
+# SQLite temporary files
+*.db-journal
+
+# Generated reports
+FeedbackReport.pdf
+FeedbackReport.xlsx
+LoginHistory.xlsx
+LoginHistoryReport.pdf
+Smart_Feedback_Report.xlsx
+
+# Python cache
+.pytest_cache/

@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Admin Dashboard</title>
+
+    <link rel="icon"
+        type="image/png"
+        href="{{ url_for('static', filename='images/favicon.png') }}">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <style>
+
+        body{
+            background:#f4f7fb;
+            transition:.4s;
+        }
+
+        .dark{
+            background:#212529;
+            color:white;
+        }
+
+        .dashboard-title{
+            font-weight:bold;
+            color:#0d6efd;
+        }
+
+        .card{
+            border:none;
+            border-radius:15px;
+            box-shadow:0 5px 15px rgba(0,0,0,.15);
+            transition:.3s;
+        }
+
+        .card:hover{
+            transform:translateY(-5px);
+        }
+
+        #pieChart,#barChart{
+            width:100%;
+            height:420px;
+            background:white;
+            border-radius:15px;
+            box-shadow:0 5px 15px rgba(0,0,0,.15);
+        }
+
+        .dark #pieChart,
+        .dark #barChart{
+            background:#2d3436;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container-fluid py-4">
+
+<div class="container">
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+<div>
+
+<h2 class="dashboard-title">
+
+📊 Smart Feedback & Suggestion Portal
+
+</h2>
+
+<p class="text-muted">
+
+Administrator Dashboard
+
+</p>
+
+</div>
+
+<button
+class="btn btn-dark"
+onclick="darkMode()">
+
+🌙 Dark Mode
+
+</button>
+
+</div>
+
+<hr>
+
+<div class="row g-4">
+
+<div class="col-lg-3 col-md-6">
+
+<div class="card bg-primary text-white">
+
+<div class="card-body text-center">
+
+<h5>Total Feedback</h5>
+
+<h1>{{ total }}</h1>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-lg-3 col-md-6">
+
+<div class="card bg-success text-white">
+
+<div class="card-body text-center">
+
+<h5>Positive</h5>
+
+<h1>{{ positive }}</h1>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-lg-3 col-md-6">
+
+<div class="card bg-danger text-white">
+
+<div class="card-body text-center">
+
+<h5>Negative</h5>
+
+<h1>{{ negative }}</h1>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-lg-3 col-md-6">
+
+<div class="card bg-warning">
+
+<div class="card-body text-center">
+
+<h5>Neutral</h5>
+
+<h1>{{ neutral }}</h1>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="row mt-5">
+
+<div class="col-lg-6 mb-4">
+
+<div id="pieChart"></div>
+
+</div>
+
+<div class="col-lg-6 mb-4">
+
+<div id="barChart"></div>
+
+</div>
+
+</div>
+<!-- ========================= -->
+<!-- Search & Action Buttons -->
+<!-- ========================= -->
+
+<div class="card shadow-sm mb-4">
+
+<div class="card-body">
+
+<div class="row">
+
+<div class="col-md-5 mb-2">
+
+<input
+type="text"
+id="search"
+class="form-control"
+placeholder="🔍 Search Student Name..."
+onkeyup="searchTable()">
+
+</div>
+
+<div class="col-md-7 text-md-end">
+
+<a href="/export"
+class="btn btn-success">
+
+📄 Export CSV
+
+</a>
+
+<a href="/pdf"
+class="btn btn-danger">
+
+📑 Download PDF
+
+</a>
+
+<a href="/admin_logout"
+class="btn btn-secondary">
+
+🚪 Logout
+
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- ========================= -->
+<!-- Feedback Table -->
+<!-- ========================= -->
+
+<div class="card shadow">
+
+<div class="card-header bg-primary text-white">
+
+<h4 class="mb-0">
+
+Student Feedback Records
+
+</h4>
+
+</div>
+
+<div class="card-body">
+
+<div class="table-responsive">
+
+<table
+id="feedbackTable"
+class="table table-striped table-hover align-middle">
+
+<thead class="table-dark">
+
+<tr>
+
+<th>ID</th>
+
+<th>Student</th>
+
+<th>Category</th>
+
+<th>Feedback</th>
+
+<th>Sentiment</th>
+
+<th>Suggestion</th>
+
+<th>Date</th>
+
+<th>Action</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for row in feedback %}
+
+<tr>
+
+<td>{{ row.id }}</td>
+
+<td>{{ row.student_name }}</td>
+
+<td>{{ row.category }}</td>
+
+<td style="min-width:250px;">
+
+{{ row.feedback }}
+
+</td>
+
+<td>
+
+{% if row.sentiment=="Positive" %}
+
+<span class="badge bg-success">
+
+Positive
+
+</span>
+
+{% elif row.sentiment=="Negative" %}
+
+<span class="badge bg-danger">
+
+Negative
+
+</span>
+
+{% else %}
+
+<span class="badge bg-warning text-dark">
+
+Neutral
+
+</span>
+
+{% endif %}
+
+</td>
+
+<td style="min-width:220px;">
+
+{{ row.suggestion }}
+
+</td>
+
+<td>
+
+{{ row.date }}
+
+</td>
+
+<td>
+
+<a
+href="/admin_delete/{{ row.id }}"
+class="btn btn-sm btn-danger"
+onclick="return confirm('Delete this feedback?')">
+
+Delete
+
+</a>
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</div>
+<!-- ========================= -->
+<!-- Plotly Charts -->
+<!-- ========================= -->
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const pie = JSON.parse('{{ pie_graph|safe }}');
+    Plotly.newPlot(
+        "pieChart",
+        pie.data,
+        pie.layout,
+        {
+            responsive:true,
+            displayModeBar:false
+        }
+    );
+
+    const bar = JSON.parse('{{ bar_graph|safe }}');
+    Plotly.newPlot(
+        "barChart",
+        bar.data,
+        bar.layout,
+        {
+            responsive:true,
+            displayModeBar:false
+        }
+    );
+
+});
+
+</script>
+
+<!-- ========================= -->
+<!-- Search -->
+<!-- ========================= -->
+
+<script>
+
+function searchTable(){
+
+    let input=document.getElementById("search");
+
+    let filter=input.value.toUpperCase();
+
+    let table=document.getElementById("feedbackTable");
+
+    let tr=table.getElementsByTagName("tr");
+
+    for(let i=1;i<tr.length;i++){
+
+        let td=tr[i].getElementsByTagName("td")[1];
+
+        if(td){
+
+            let txt=td.textContent || td.innerText;
+
+            if(txt.toUpperCase().indexOf(filter)>-1){
+
+                tr[i].style.display="";
+
+            }
+
+            else{
+
+                tr[i].style.display="none";
+
+            }
+
+        }
+
+    }
+
+}
+
+</script>
+
+<!-- ========================= -->
+<!-- Dark Mode -->
+<!-- ========================= -->
+
+<script>
+
+function darkMode(){
+
+    document.body.classList.toggle("dark");
+
+}
+
+</script>
+
+<!-- ========================= -->
+<!-- Footer -->
+<!-- ========================= -->
+
+<footer class="text-center mt-5 mb-3 text-muted">
+
+<hr>
+
+<p>
+
+© 2026 Smart Feedback & Suggestion Portal
+
+</p>
+
+<p>
+
+Developed by <strong>Avijit Roy</strong>
+
+</p>
+
+</footer>
+
+</div>
+
+</div>
+
+</body>
+
+</html>

@@ -1,0 +1,756 @@
+/* ==========================================
+        SMART FEEDBACK & SUGGESTION PORTAL
+        FINAL CSS
+========================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:'Poppins',sans-serif;
+    background:#f4f7fb;
+    color:#222;
+    overflow-x:hidden;
+}
+
+/* ==========================================
+                HERO SECTION
+========================================== */
+
+.hero{
+
+    background: linear-gradient(
+        135deg,
+        #0f172a,
+        #1e293b,
+        #312e81
+    );
+
+    color: white;
+
+    text-align: center;
+
+    padding: 120px 20px;
+
+    min-height: 90vh;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+}
+
+.hero h1{
+
+    font-size: 58px;
+
+    font-weight: 700;
+
+    line-height: 1.2;
+
+}
+
+.hero p{
+
+    font-size: 22px;
+
+    margin-top: 20px;
+
+    margin-bottom: 35px;
+
+    color: rgba(255,255,255,0.9);
+
+}
+
+
+/* ==========================================
+            DASHBOARD HEADER
+========================================== */
+
+.dashboard-header{
+    margin-top:30px;
+    margin-bottom:25px;
+}
+
+.portal-title{
+    font-size:52px;
+    font-weight:800;
+    color:#1769ff;
+}
+
+.portal-subtitle{
+    color:#666;
+    font-size:24px;
+}
+
+.dashboard-header h4{
+    font-size:34px;
+    font-weight:600;
+}
+
+.dashboard-header p{
+    margin-bottom:8px;
+}
+
+/* ==========================================
+            COMMON CARD
+========================================== */
+
+.card{
+    border:none;
+    border-radius:20px;
+    box-shadow:0 10px 25px rgba(0,0,0,.10);
+    transition:.35s ease;
+    overflow:hidden;
+}
+
+.card:hover{
+    transform:translateY(-8px);
+    box-shadow:0 18px 35px rgba(0,0,0,.20);
+}
+
+/* ==========================================
+            DASHBOARD CARDS
+========================================== */
+
+.stat-card{
+
+    border-radius:20px;
+
+    padding:30px;
+
+    text-align:center;
+
+    color:white;
+
+    transition:.35s;
+
+    cursor:pointer;
+
+    box-shadow:0 12px 25px rgba(0,0,0,.18);
+
+}
+
+.stat-card:hover{
+
+    transform:translateY(-10px) scale(1.02);
+
+    box-shadow:0 20px 35px rgba(0,0,0,.25);
+
+}
+
+.stat-card h2{
+
+    font-size:55px;
+
+    font-weight:700;
+
+}
+
+.stat-card h4{
+
+    font-size:30px;
+
+    font-weight:600;
+
+}
+
+/* Card Colors */
+
+.total-card{
+
+    background:linear-gradient(135deg,#0d6efd,#3b82f6);
+
+}
+
+.positive-card{
+
+    background:linear-gradient(135deg,#198754,#28a745);
+
+}
+
+.negative-card{
+
+    background:linear-gradient(135deg,#dc3545,#ff4d5a);
+
+}
+
+.neutral-card{
+
+    background:linear-gradient(135deg,#ffc107,#ffb300);
+
+    color:#222;
+
+}
+
+/* ==========================================
+        SMALL INFORMATION CARDS
+========================================== */
+
+.info-card{
+
+    border-radius:18px;
+
+    background:white;
+
+    padding:25px;
+
+    text-align:center;
+
+    box-shadow:0 8px 18px rgba(0,0,0,.10);
+
+    transition:.35s;
+
+}
+
+.info-card:hover{
+
+    transform:translateY(-8px);
+
+    box-shadow:0 15px 30px rgba(0,0,0,.18);
+
+}
+
+.info-card h3{
+
+    font-weight:700;
+
+}
+
+.info-card h2{
+
+    color:#1769ff;
+
+    font-size:48px;
+
+    font-weight:700;
+
+}
+
+/* ==========================================
+            FEATURE CARDS
+========================================== */
+
+.feature-card{
+
+    border-radius:20px;
+
+    padding:30px 20px;
+
+    min-height:300px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    align-items:center;
+
+    text-align:center;
+
+    box-shadow:0 8px 20px rgba(0,0,0,.10);
+
+    transition:.35s;
+
+}
+
+.feature-card:hover{
+
+    transform:translateY(-10px);
+
+    box-shadow:0 20px 35px rgba(0,0,0,.18);
+
+}
+
+.blue-card{
+
+    background:#EAF4FF;
+
+}
+
+.green-card{
+
+    background:#EAFBF2;
+
+}
+
+.yellow-card{
+
+    background:#FFF8E5;
+
+}
+
+.pink-card{
+
+    background:#FDEEF4;
+
+}
+
+.feature-icon{
+
+    width:75px;
+
+    height:75px;
+
+    background:white;
+
+    border-radius:50%;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    font-size:34px;
+
+    margin-bottom:20px;
+
+    box-shadow:0 6px 15px rgba(0,0,0,.12);
+
+}
+
+/* ==========================================
+            CHART BOX
+========================================== */
+
+.chart-box{
+
+    background:white;
+
+    border-radius:20px;
+
+    padding:25px;
+
+    box-shadow:0 8px 20px rgba(0,0,0,.10);
+
+    transition:.35s;
+
+}
+
+.chart-box:hover{
+
+    transform:translateY(-8px);
+
+    box-shadow:0 18px 35px rgba(0,0,0,.18);
+
+}
+
+/* ==========================================
+            BUTTONS
+========================================== */
+
+.btn{
+
+    border-radius:12px;
+
+    transition:.30s;
+
+    font-weight:600;
+
+}
+
+.btn:hover{
+
+    transform:translateY(-3px);
+
+}
+
+.dashboard-btn{
+
+    width:180px;
+
+    margin:5px;
+
+}
+
+/* ==========================================
+            SEARCH BAR
+========================================== */
+
+.search-box{
+
+    border-radius:30px;
+
+    padding:12px 20px;
+
+    border:1px solid #ddd;
+
+    transition:.3s;
+
+}
+
+.search-box:focus{
+
+    border-color:#1769ff;
+
+    box-shadow:0 0 10px rgba(23,105,255,.25);
+
+}
+
+/* ==========================================
+            TABLE
+========================================== */
+
+.table{
+
+    background:white;
+
+    border-radius:18px;
+
+    overflow:hidden;
+
+}
+
+.table thead{
+
+    background:#212529;
+
+    color:white;
+
+}
+
+.table tbody tr{
+
+    transition:.25s;
+
+}
+
+.table tbody tr:hover{
+
+    background:#f5f8ff;
+
+}
+
+/* ==========================================
+        PROGRESS BAR
+========================================== */
+
+.progress{
+
+    height:30px;
+
+    border-radius:20px;
+
+    background:#dee2e6;
+
+}
+
+.progress-bar{
+
+    font-weight:bold;
+
+    animation:growBar 1.5s;
+
+}
+
+@keyframes growBar{
+
+    from{
+
+        width:0;
+
+    }
+
+}
+
+/* ==========================================
+            AI SECTION
+========================================== */
+
+.ai-card{
+
+    background:white;
+
+    border-radius:20px;
+
+    padding:25px;
+
+    box-shadow:0 8px 20px rgba(0,0,0,.12);
+
+}
+
+.ai-title{
+
+    font-size:28px;
+
+    font-weight:700;
+
+    color:#1769ff;
+
+}
+
+/* ==========================================
+            FOOTER
+========================================== */
+
+footer{
+
+    margin-top:60px;
+
+    padding:25px;
+
+    text-align:center;
+
+    background:#212529;
+
+    color:white;
+
+}
+
+footer h5{
+
+    margin-bottom:10px;
+
+}
+
+/* ==========================================
+        DARK MODE
+========================================== */
+
+.dark-mode{
+
+    background:#121212 !important;
+
+    color:white;
+
+}
+
+.dark-mode .card,
+
+.dark-mode .chart-box,
+
+.dark-mode .info-card,
+
+.dark-mode .table{
+
+    background:#1e1e1e;
+
+    color:white;
+
+}
+
+.dark-mode .table thead{
+
+    background:#000;
+
+}
+
+.dark-mode .table tbody tr:hover{
+
+    background:#333;
+
+}
+
+/* ==========================================
+            ANIMATIONS
+========================================== */
+
+.fade-up{
+
+    animation:fadeUp .8s ease;
+
+}
+
+@keyframes fadeUp{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(30px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+
+    }
+
+}
+
+.zoom-in{
+
+    animation:zoomIn .6s ease;
+
+}
+
+@keyframes zoomIn{
+
+    from{
+
+        opacity:0;
+
+        transform:scale(.8);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:scale(1);
+
+    }
+
+}
+
+/* ==========================================
+            RESPONSIVE
+========================================== */
+
+@media(max-width:768px){
+
+.hero h1{
+
+    font-size:34px;
+
+}
+
+.portal-title{
+
+    font-size:36px;
+
+}
+
+.stat-card h2{
+
+    font-size:40px;
+
+}
+
+.dashboard-btn{
+
+    width:100%;
+
+}
+
+.feature-card{
+
+    min-height:240px;
+
+}
+
+}
+
+/* Date & Time */
+
+.time-date{
+
+    font-size:22px;
+
+    font-weight:600;
+
+    color:#212529;      /* Black */
+
+    margin-top:12px;
+
+    margin-bottom:12px;
+
+}
+
+.time-date i{
+
+    color:#0d6efd;
+
+}
+
+/* ==========================================
+      Admin Management Table
+========================================== */
+
+#adminTable tbody tr{
+
+    transition:.3s;
+
+}
+
+#adminTable tbody tr:hover{
+
+    background:#eef5ff;
+
+    transform:scale(1.01);
+
+}
+
+a.disabled{
+
+    pointer-events:none;
+
+    opacity:.6;
+
+}
+
+a.disabled{
+
+pointer-events:none;
+
+opacity:.6;
+
+}
+
+.logo{
+    filter: drop-shadow(0 0 25px rgba(255,255,255,0.5));
+    transition:0.4s;
+}
+
+.logo:hover{
+    transform:scale(1.08);
+}
+
+/* ==========================================
+                NAVBAR
+========================================== */
+
+.navbar{
+
+    background: #111827 !important;
+
+    box-shadow: 0 3px 15px rgba(0,0,0,0.25);
+
+}
+
+.navbar-brand{
+
+    font-weight: 700;
+
+    font-size: 24px;
+
+    letter-spacing: 0.5px;
+
+}
+
+.navbar .nav-link{
+
+    color: rgba(255,255,255,0.85) !important;
+
+    font-weight: 500;
+
+    transition: 0.3s;
+
+}
+
+.navbar .nav-link:hover{
+
+    color: #38bdf8 !important;
+
+}
+
+.navbar .nav-link.active{
+
+    color: white !important;
+
+    font-weight: 600;
+
+}

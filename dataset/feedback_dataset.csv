@@ -1,0 +1,31 @@
+feedback,sentiment
+The teacher explains very well,Positive
+Excellent faculty,Positive
+Very good classroom,Positive
+Amazing course content,Positive
+Helpful staff,Positive
+Library is excellent,Positive
+Very clean campus,Positive
+Good laboratory facilities,Positive
+The faculty is supportive,Positive
+Interesting lectures,Positive
+Teacher is rude,Negative
+Very dirty classroom,Negative
+Poor facilities,Negative
+Course is boring,Negative
+Bad laboratory equipment,Negative
+No proper internet,Negative
+Very noisy classroom,Negative
+Faculty is not helpful,Negative
+Worst experience,Negative
+Campus is not clean,Negative
+Course is okay,Neutral
+Average classroom,Neutral
+Faculty is fine,Neutral
+Nothing special,Neutral
+Can be improved,Neutral
+Library is acceptable,Neutral
+Teaching is normal,Neutral
+Facilities are average,Neutral
+It is satisfactory,Neutral
+Everything is manageable,Neutral
