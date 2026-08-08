@@ -1472,7 +1472,7 @@ def dashboard_v2():
     cursor.execute("""
     SELECT COUNT(*)
     FROM feedback
-    WHERE strftime('%Y-%m', date)=strftime('%Y-%m','now')
+    WHERE DATE(date) = CURRENT_DATE
     """)
 
     month_feedback = cursor.fetchone()[0]
