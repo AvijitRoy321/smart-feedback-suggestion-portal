@@ -1,11 +1,12 @@
 import os
 import psycopg2
-from psycopg2.extras import RealDictCursor
+from psycopg2.extras import DictCursor
 
 DATABASE_URL = os.getenv("DATABASE_URL")
 
 
 class CompatibleCursor:
+
     def __init__(self, cursor):
         self.cursor = cursor
 
@@ -25,12 +26,13 @@ class CompatibleCursor:
 
 
 class CompatibleConnection:
+
     def __init__(self, conn):
         self.conn = conn
 
     def cursor(self):
         return CompatibleCursor(
-            self.conn.cursor(cursor_factory=RealDictCursor)
+            self.conn.cursor(cursor_factory=DictCursor)
         )
 
     def commit(self):
