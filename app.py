@@ -105,6 +105,7 @@ def add_notification(message, notification_type):
     conn.close()
 
 app = Flask(__name__)
+app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY")
 app.secret_key = "smart_feedback_portal_2026"
 from datetime import timedelta
 
@@ -252,7 +253,7 @@ def register():
             return redirect("/register")
 
         # Generate OTP
-        otp = str(random.randint(100000,999999))
+        otp = str(random.randint(100000, 999999))
 
         # Save registration data temporarily
         session["student_name"] = name
@@ -262,14 +263,23 @@ def register():
         session["student_otp_time"] = datetime.now().isoformat()
 
         # Send OTP
-        send_otp(email, otp)
+        if send_otp(email, otp):
 
-        flash(
-            "OTP has been sent to your email.",
-            "success"
-        )
+            flash(
+                "OTP has been sent to your email.",
+                "success"
+            )
 
-        return redirect("/verify_register_otp")
+            return redirect("/verify_register_otp")
+
+        else:
+
+            flash(
+                "Unable to send OTP. Please check your email address and try again.",
+                "danger"
+            )
+
+            return redirect("/register")
 
     return render_template("register.html")
 

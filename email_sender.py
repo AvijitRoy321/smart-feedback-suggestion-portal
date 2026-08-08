@@ -1,41 +1,70 @@
-import smtplib
-from email.message import EmailMessage
 import os
+import json
+import urllib.request
+import urllib.error
 from dotenv import load_dotenv
 
 load_dotenv()
 
 EMAIL_ADDRESS = os.getenv("EMAIL_ADDRESS")
-EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD")
+BREVO_API_KEY = os.getenv("BREVO_API_KEY")
 
 
 def send_otp(receiver_email, otp):
 
-    msg = EmailMessage()
+    data = {
+        "sender": {
+            "name": "Smart Feedback Portal",
+            "email": EMAIL_ADDRESS
+        },
+        "to": [
+            {
+                "email": receiver_email
+            }
+        ],
+        "subject": "Smart Feedback Portal - Email Verification OTP",
+        "htmlContent": f"""
+        <html>
+        <body>
+            <h2>Smart Feedback Portal</h2>
 
-    msg["Subject"] = "Smart Feedback Portal - Email Verification OTP"
+            <p>Hello,</p>
 
-    msg["From"] = EMAIL_ADDRESS
+            <p>Your OTP for Smart Feedback Portal is:</p>
 
-    msg["To"] = receiver_email
+            <h1>{otp}</h1>
 
-    msg.set_content(f"""
-Hello,
+            <p>This OTP is valid for 5 minutes.</p>
 
-Your OTP for Smart Feedback Portal is:
+            <p>If you did not request this OTP, please ignore this email.</p>
 
-{otp}
+            <p>Thank you,<br>
+            Smart Feedback Portal</p>
+        </body>
+        </html>
+        """
+    }
 
-This OTP is valid for 5 minutes.
+    req = urllib.request.Request(
+        "https://api.brevo.com/v3/smtp/email",
+        data=json.dumps(data).encode("utf-8"),
+        headers={
+            "accept": "application/json",
+            "api-key": BREVO_API_KEY,
+            "content-type": "application/json"
+        },
+        method="POST"
+    )
 
-If you did not request this OTP, please ignore this email.
+    try:
+        with urllib.request.urlopen(req, timeout=20) as response:
+            return response.status == 201
 
-Thank you,
-Smart Feedback Portal
-""")
+    except urllib.error.HTTPError as e:
+        print("Brevo HTTP Error:", e.code)
+        print(e.read().decode())
+        return False
 
-    with smtplib.SMTP_SSL("smtp.gmail.com", 465) as smtp:
-
-        smtp.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
-
-        smtp.send_message(msg)
+    except Exception as e:
+        print("Brevo Email Error:", e)
+        return False
