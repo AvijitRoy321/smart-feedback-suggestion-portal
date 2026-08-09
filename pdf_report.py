@@ -800,4 +800,6 @@ def generate_login_history():
     )
 
     pdf.build(elements)
+
+    return os.path.abspath("LoginHistoryReport.pdf")
     return pdf_path
