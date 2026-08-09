@@ -4007,17 +4007,14 @@ def generate_login_history():
 def pdf_login_history():
 
     if "admin" not in session:
-
         return redirect("/admin_login")
 
-    generate_login_history()
+    pdf_path = generate_login_history()
 
     return send_file(
-
-        "LoginHistoryReport.pdf",
-
-        as_attachment=True
-
+        pdf_path,
+        as_attachment=True,
+        download_name="LoginHistoryReport.pdf"
     )
 
 @app.route("/delete_login_history/<int:id>")

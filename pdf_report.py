@@ -13,7 +13,7 @@ from reportlab.lib import colors
 from reportlab.lib.units import inch
 from reportlab.graphics.shapes import Drawing, Line
 from database import get_connection
-
+import os
 
 def generate():
 
@@ -592,7 +592,12 @@ def generate_login_history():
 
     conn.close()
 
-    pdf = SimpleDocTemplate("LoginHistoryReport.pdf")
+    pdf_path = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)),
+        "LoginHistoryReport.pdf"
+    )
+
+    pdf = SimpleDocTemplate(pdf_path)
 
     styles = getSampleStyleSheet()
 
@@ -795,3 +800,4 @@ def generate_login_history():
     )
 
     pdf.build(elements)
+    return pdf_path
