@@ -1244,12 +1244,32 @@ def export_excel():
 
     title = ws["A1"]
     title.value = "SMART FEEDBACK & SUGGESTION PORTAL"
+    title.font = Font(
+        size=16,
+        bold=True,
+        color="0D6EFD"
+    )
+    title.alignment = Alignment(
+        horizontal="center",
+        vertical="center"
+    )
+
+    # ==========================
+    # Report Subtitle
+    # ==========================
+
     ws.merge_cells("A2:I2")
-    ws["A2"] = "Complete Feedback Report"
-    ws["A2"].font = Font(size=14, bold=True)
-    ws["A2"].alignment = Alignment(horizontal="center")
-    title.font = Font(size=16, bold=True, color="0D6EFD")
-    title.alignment = Alignment(horizontal="center")
+
+    subtitle = ws["A2"]
+    subtitle.value = "Complete Feedback Report"
+    subtitle.font = Font(
+        size=14,
+        bold=True
+    )
+    subtitle.alignment = Alignment(
+        horizontal="center",
+        vertical="center"
+    )
 
     # ==========================
     # Header
@@ -1277,13 +1297,23 @@ def export_excel():
 
     thin = Side(style="thin")
 
+    # Header is now ROW 3
     for col, header in enumerate(headers, start=1):
 
-        cell = ws.cell(row=2, column=col)
+        cell = ws.cell(
+            row=3,
+            column=col
+        )
 
         cell.value = header
-        cell.font = Font(bold=True, color="FFFFFF")
+
+        cell.font = Font(
+            bold=True,
+            color="FFFFFF"
+        )
+
         cell.fill = header_fill
+
         cell.alignment = Alignment(
             horizontal="center",
             vertical="center"
@@ -1302,35 +1332,82 @@ def export_excel():
 
     previous_submission = None
 
-    excel_row = 3
+    # Data now starts at ROW 4
+    excel_row = 4
 
     for index, row in enumerate(rows, start=1):
 
-        ws.cell(excel_row, 1).value = index
-        ws.cell(excel_row, 2).value = row["submission_id"]
-        ws.cell(excel_row, 3).value = row["student_name"]
-        ws.cell(excel_row, 4).value = row["category"]
+        ws.cell(
+            excel_row,
+            1
+        ).value = index
 
-        feedback_cell = ws.cell(excel_row, 5)
+        ws.cell(
+            excel_row,
+            2
+        ).value = row["submission_id"]
+
+        ws.cell(
+            excel_row,
+            3
+        ).value = row["student_name"]
+
+        ws.cell(
+            excel_row,
+            4
+        ).value = row["category"]
+
+        feedback_cell = ws.cell(
+            excel_row,
+            5
+        )
+
         feedback_cell.value = row["feedback"]
+
         feedback_cell.alignment = Alignment(
             wrap_text=True,
             vertical="top"
         )
 
-        ws.cell(excel_row, 6).value = row["sentiment"]
-        ws.cell(excel_row, 7).value = row["suggestion"]
+        ws.cell(
+            excel_row,
+            6
+        ).value = row["sentiment"]
+
+        ws.cell(
+            excel_row,
+            7
+        ).value = row["suggestion"]
 
         if previous_submission != row["submission_id"]:
-            ws.cell(excel_row, 8).value = row["overall_suggestion"]
+
+            ws.cell(
+                excel_row,
+                8
+            ).value = row["overall_suggestion"]
+
         else:
-            ws.cell(excel_row, 8).value = ""
 
-        ws.cell(excel_row, 9).value = row["date"]
+            ws.cell(
+                excel_row,
+                8
+            ).value = ""
 
+        ws.cell(
+            excel_row,
+            9
+        ).value = row["date"]
+
+        # ==========================
         # Borders
+        # ==========================
+
         for col in range(1, 10):
-            ws.cell(excel_row, col).border = Border(
+
+            ws.cell(
+                excel_row,
+                col
+            ).border = Border(
                 left=thin,
                 right=thin,
                 top=thin,
@@ -1338,19 +1415,20 @@ def export_excel():
             )
 
         previous_submission = row["submission_id"]
+
         excel_row += 1
 
     # ==========================
     # Freeze Header
     # ==========================
 
-    ws.freeze_panes = "A3"
+    ws.freeze_panes = "A4"
 
     # ==========================
     # Filters
     # ==========================
 
-    ws.auto_filter.ref = f"A2:I{excel_row-1}"
+    ws.auto_filter.ref = f"A3:I{excel_row - 1}"
 
     # ==========================
     # Auto Column Width
@@ -1364,15 +1442,30 @@ def export_excel():
 
         column_letter = get_column_letter(col)
 
-        for row in range(2, excel_row):
+        for row in range(3, excel_row):
 
-            cell = ws.cell(row=row, column=col)
+            cell = ws.cell(
+                row=row,
+                column=col
+            )
 
             if cell.value:
 
-                max_length = max(max_length, len(str(cell.value)))
+                max_length = max(
+                    max_length,
+                    len(str(cell.value))
+                )
 
-        ws.column_dimensions[column_letter].width = min(max_length + 5, 50)
+        ws.column_dimensions[
+            column_letter
+        ].width = min(
+            max_length + 5,
+            50
+        )
+
+    # ==========================
+    # Save Excel
+    # ==========================
 
     filename = "Smart_Feedback_Report.xlsx"
 
