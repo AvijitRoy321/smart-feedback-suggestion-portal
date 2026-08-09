@@ -260,7 +260,7 @@ def generate():
 
             submissions[sid] = {
                 "student": row["student_name"],
-                "date": row["date"][:10],
+                "date": row["date"].strftime("%Y-%m-%d") if row["date"] else "",
                 "overall": row["overall_suggestion"],
                 "items": []
             }
