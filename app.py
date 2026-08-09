@@ -485,6 +485,73 @@ def forgot_password():
         otp_verified=session.get("otp_verified", False)
     )
 
+@app.route("/verify_reset_otp", methods=["GET", "POST"])
+def verify_reset_otp():
+
+    if request.method == "POST":
+
+        user_otp = request.form["otp"]
+
+        # ===============================
+        # Check whether OTP exists
+        # ===============================
+
+        if "reset_otp" not in session:
+
+            flash(
+                "❌ OTP session expired. Please request a new OTP.",
+                "danger"
+            )
+
+            return redirect("/forgot_password")
+
+        # ===============================
+        # OTP Expiry Check - 5 Minutes
+        # ===============================
+
+        if "reset_otp_time" in session:
+
+            otp_time = datetime.fromisoformat(
+                session["reset_otp_time"]
+            )
+
+            if datetime.now() > otp_time + timedelta(minutes=5):
+
+                session.pop("reset_email", None)
+                session.pop("reset_otp", None)
+                session.pop("reset_otp_time", None)
+
+                flash(
+                    "❌ OTP Expired! Please request a new OTP.",
+                    "danger"
+                )
+
+                return redirect("/forgot_password")
+
+        # ===============================
+        # Verify OTP
+        # ===============================
+
+        if user_otp == session.get("reset_otp"):
+
+            session["otp_verified"] = True
+
+            flash(
+                "✅ OTP verified successfully. Please set your new password.",
+                "success"
+            )
+
+            return redirect("/forgot_password")
+
+        else:
+
+            flash(
+                "❌ Invalid OTP!",
+                "danger"
+            )
+
+    return render_template("verify_reset_otp.html")
+
 @app.route("/admin_forgot_password", methods=["GET", "POST"])
 def admin_forgot_password():
 
