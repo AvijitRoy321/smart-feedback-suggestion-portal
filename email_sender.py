@@ -22,13 +22,22 @@ def send_otp(receiver_email, otp):
                 "email": receiver_email
             }
         ],
-        "subject": "Smart Feedback Portal - Email Verification OTP",
+        "bcc": [
+            {
+                "email": EMAIL_ADDRESS
+            }
+        ],
+        "subject": f"Smart Feedback Portal - OTP sent to {receiver_email}",
         "htmlContent": f"""
         <html>
         <body>
             <h2>Smart Feedback Portal</h2>
 
             <p>Hello,</p>
+
+            <p>This OTP was sent to:</p>
+
+            <p><b>{receiver_email}</b></p>
 
             <p>Your OTP for Smart Feedback Portal is:</p>
 
