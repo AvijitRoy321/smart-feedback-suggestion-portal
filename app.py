@@ -4003,6 +4003,9 @@ def generate_login_history():
         )
     )
 
+    pdf.build(elements)
+    return os.path.abspath("LoginHistoryReport.pdf")
+
 @app.route("/pdf_login_history")
 def pdf_login_history():
 
